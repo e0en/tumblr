@@ -20,7 +20,15 @@ print("Please go here and authorize.", authorization_url)
 redirect_response = input("Pase the full redirect url:")
 tumblr.parse_authorization_response(redirect_response)
 
-tumblr.fetch_access_token(access_token_url)
+oauth_tokens = tumblr.fetch_access_token(access_token_url)
+
+resource_owner_key = oauth_tokens.get("oauth_token")
+resource_owner_secret = oauth_tokens.get("oauth_token_secret")
+
+oauth = OAuth1(client_id,
+               client_secret=client_secret,
+               resource_owner_key=resource_owner_key,
+               resource_owner_secret=resource_owner_secret)
 
 r = tumblr.get(api_url_base + "user/likes")
 print(r.content)
