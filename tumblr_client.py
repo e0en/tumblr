@@ -4,6 +4,8 @@ from requests_oauthlib import OAuth1Session, OAuth1
 import requests
 import pickle
 import os
+import webbrowser
+
 from secrets import CLIENT_ID, CLIENT_SECRET, OAUTH_FILE_NAME
 
 
@@ -21,9 +23,9 @@ def get_oauth_tokens(client_id, client_secret):
     tumblr.fetch_request_token(request_token_url)
 
     authorization_url = tumblr.authorization_url(authorize_base_url)
-    print("Please go here and authorize.", authorization_url)
+    webbrowser.open(authorization_url)
 
-    redirect_response = input("Pase the full redirect url:")
+    redirect_response = input("Paste the full redirect url:")
     tumblr.parse_authorization_response(redirect_response)
 
     oauth_tokens = tumblr.fetch_access_token(access_token_url)
