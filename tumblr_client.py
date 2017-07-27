@@ -4,11 +4,13 @@ from requests_oauthlib import OAuth1Session, OAuth1
 from secrets import client_id, client_secret
 
 
-request_token_url = "https://www.tumblr.com/oauth/request_token"
-authorize_base_url = "https://www.tumblr.com/oauth/authorize"
-access_token_url = "https://www.tumblr.com/oauth/access_token"
+def oauth_url(name):
+    return "https://www.tumblr.com/oauth/" + name
 
-api_url_base = "http://api.tumblr.com/v2/"
+
+request_token_url = oauth_url("request_token")
+authorize_base_url = oauth_url("authorize")
+access_token_url = oauth_url("access_token")
 
 
 tumblr = OAuth1Session(client_id, client_secret=client_secret)
@@ -30,5 +32,7 @@ oauth = OAuth1(client_id,
                resource_owner_key=resource_owner_key,
                resource_owner_secret=resource_owner_secret)
 
-r = tumblr.get(api_url_base + "user/likes")
+api_url_prefix = "http://api.tumblr.com/v2/"
+
+r = tumblr.get(api_url_prefix + "user/likes")
 print(r.content)
