@@ -18,7 +18,7 @@ authorize_base_url = oauth_url("authorize")
 access_token_url = oauth_url("access_token")
 
 
-def get_oauth_tokens(client_id, client_secret):
+def retrieve_oauth_tokens(client_id, client_secret):
     tumblr = OAuth1Session(client_id, client_secret=client_secret)
     tumblr.fetch_request_token(request_token_url)
 
@@ -41,15 +41,20 @@ def get_oauth_tokens(client_id, client_secret):
                   resource_owner_secret=resource_owner_secret)
 
 
-if os.path.exists(OAUTH_FILE_NAME):
-    with open(OAUTH_FILE_NAME, "rb") as fp:
-        oauth1 = pickle.load(fp)
-else:
-    oauth1 = get_oauth_tokens(CLIENT_ID, CLIENT_SECRET)
-    with open(OAUTH_FILE_NAME, "wb") as fp:
-        pickle.dump(oauth1, fp)
+def load_oauth():
+    if os.path.exists(OAUTH_FILE_NAME):
+        with open(OAUTH_FILE_NAME, "rb") as fp:
+            oauth1 = pickle.load(fp)
+    else:
+        oauth1 = retrieve_oauth_tokens(CLIENT_ID, CLIENT_SECRET)
+        with open(OAUTH_FILE_NAME, "wb") as fp:
+            pickle.dump(oauth1, fp)
+    return oauth1
 
-api_url_prefix = "http://api.tumblr.com/v2/"
 
-r = requests.get(api_url_prefix + "user/likes", auth=oauth1)
-print(r.content)
+if __name__ == "__main__":
+    api_url_prefix = "http://api.tumblr.com/v2/"
+
+    oauth1 = load_oauth()
+    r = requests.get(api_url_prefix + "user/likes", auth=oauth1)
+    print(r.content)
