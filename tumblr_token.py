@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 from requests_oauthlib import OAuth1Session, OAuth1
-import requests
 import pickle
 import os
 import webbrowser
@@ -50,11 +49,3 @@ def load_oauth():
         with open(OAUTH_FILE_NAME, "wb") as fp:
             pickle.dump(oauth1, fp)
     return oauth1
-
-
-if __name__ == "__main__":
-    api_url_prefix = "http://api.tumblr.com/v2/"
-
-    oauth1 = load_oauth()
-    r = requests.get(api_url_prefix + "user/likes", auth=oauth1)
-    print(r.content)
