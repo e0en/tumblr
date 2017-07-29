@@ -3,18 +3,10 @@
 import requests
 import json
 
-from tumblr_token import load_oauth
+from tumblr_token import load_oauth, CLIENT_ID
 
 
 api_url_prefix = "http://api.tumblr.com/v2/"
-
-
-def json_to_dict(post):
-    tags = post["tags"]
-    post_url = post["post_url"]
-    timestamp = post["liked_timestamp"]
-
-    return {"tags": tags, "post_url": post_url, "timestamp": timestamp}
 
 
 def retrieve_like_page(oauth, timestamp):
@@ -24,7 +16,27 @@ def retrieve_like_page(oauth, timestamp):
         params = {}
     r = requests.get(api_url_prefix + "user/likes", auth=oauth1, params=params)
     posts = json.loads(r.content)["response"]["liked_posts"]
-    return [json_to_dict(x) for x in posts]
+    return posts
+
+
+def retrieve_post(post_url):
+    no_http = post_url.split("//")[1]
+    blog_and_post = no_http.split("/")
+    blog_id = blog_and_post[0]
+    post_id = blog_and_post[1]
+
+    url = api_url_prefix + "blog/" + blog_id + "/posts"
+    params = {"api_key": CLIENT_ID, "id": post_id}
+    r = requests.get(url, params)
+    post = json.loads(r.content)
+
+    return post['response']['posts'][0]
+
+
+def unlike_post(post, oauth):
+    url = api_url_prefix + "user/unlike"
+    params = {'id': post['id'], 'reblog_key': post['reblog_key']}
+    r = requests.post(url, params, auth=ouath)
 
 
 if __name__ == "__main__":
@@ -43,4 +55,4 @@ if __name__ == "__main__":
             print(str(n), end=":")
             print(", ".join(p["tags"]), end=" => ")
             print(p["post_url"])
-            last_timestamp = p["timestamp"]
+            last_timestamp = p["liked_timestamp"]
