@@ -23,20 +23,23 @@ def retrieve_post(post_url):
     no_http = post_url.split("//")[1]
     blog_and_post = no_http.split("/")
     blog_id = blog_and_post[0]
-    post_id = blog_and_post[1]
+    post_id = blog_and_post[2]
 
     url = api_url_prefix + "blog/" + blog_id + "/posts"
     params = {"api_key": CLIENT_ID, "id": post_id}
     r = requests.get(url, params)
     post = json.loads(r.content)
 
-    return post['response']['posts'][0]
+    if r.status_code == 200:
+        return post['response']['posts'][0]
+    else:
+        return None
 
 
 def unlike_post(post, oauth):
     url = api_url_prefix + "user/unlike"
     params = {'id': post['id'], 'reblog_key': post['reblog_key']}
-    r = requests.post(url, params, auth=ouath)
+    r = requests.post(url, params, auth=oauth)
 
 
 if __name__ == "__main__":
