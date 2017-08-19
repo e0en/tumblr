@@ -3,7 +3,7 @@
 import requests
 import json
 
-from tumblr_token import load_oauth
+from oauth_token import load_oauth
 
 
 api_url_prefix = "http://api.tumblr.com/v2/"
