@@ -3,7 +3,7 @@
 import requests
 import json
 
-from tumblr_token import load_oauth, CLIENT_ID
+from tumblr_token import load_oauth
 
 
 api_url_prefix = "http://api.tumblr.com/v2/"
@@ -19,14 +19,14 @@ def retrieve_like_page(oauth, timestamp):
     return posts
 
 
-def retrieve_post(post_url):
+def retrieve_post(client_id, post_url):
     no_http = post_url.split("//")[1]
     blog_and_post = no_http.split("/")
     blog_id = blog_and_post[0]
     post_id = blog_and_post[2]
 
     url = api_url_prefix + "blog/" + blog_id + "/posts"
-    params = {"api_key": CLIENT_ID, "id": post_id}
+    params = {"api_key": client_id, "id": post_id}
     r = requests.get(url, params)
     post = json.loads(r.content)
 
