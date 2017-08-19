@@ -3,4 +3,5 @@ secrets/
 *.pyc
 *.swp
 *.swo
+*.auth
 .DS_Store

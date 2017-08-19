@@ -43,7 +43,13 @@ def unlike_post(post, oauth):
 
 
 if __name__ == "__main__":
-    oauth1 = load_oauth()
+    import sys
+
+    if len(sys.argv) < 2:
+        print(f"usage: python {__file__} [oauth_file_name]")
+
+    filename = sys.argv[1]
+    oauth1 = load_oauth(filename)
 
     n = 0
     last_timestamp = None

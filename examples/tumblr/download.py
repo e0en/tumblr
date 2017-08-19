@@ -26,12 +26,13 @@ def make_filename(post, photo_url):
 pattern = sys.argv[1].lower()
 post_url = sys.argv[2]
 dirname = sys.argv[3]
+auth_filename = sys.argv[4]
 
 if not os.path.exists(dirname):
     os.mkdir(dirname)
 
 new_list = []
-oauth = client.load_oauth()
+oauth = client.load_oauth(auth_filename)
 
 if pattern in post_url:
     post = client.retrieve_post(post_url)
